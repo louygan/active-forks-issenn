@@ -13,6 +13,13 @@ window.addEventListener('load', () => {
     const token = localStorage.getItem('token');
     if (token)
       document.getElementById('token').value = token;
+      toggleToken();
+  } catch {}
+
+  try {
+    const branch = localStorage.getItem('branch');
+    if (branch)
+      document.getElementById('branch').value = branch;
   } catch {}
 
   if (repo) {
@@ -26,13 +33,22 @@ document.getElementById('form').addEventListener('submit', e => {
   fetchData();
 });
 
+function toggleToken() {
+  const button = document.getElementById('collapsible');
+  button.classList.toggle('active');
+
+  const content = button.parentElement.previousElementSibling;
+  content.classList.toggle('d-none');
+  button.innerHTML = content.classList.contains('d-none') ? 'Show Token' : 'Hide Token';
+}
+
 function addDarkmodeWidget() {
   new Darkmode( { label: '🌓' } ).showWidget();
 }
 
 let running = false;
 
-function fetchData() {
+async function fetchData() {
   if (running) {
     running = false;
     return;
@@ -92,7 +108,8 @@ function initDT() {
     ['Name', 'name'],
     ['Branch', 'default_branch'],
     ['Stars', 'stargazers_count'],
-    ['Forks', 'forks'],
+    ['Forks', 'forks_count'],
+    // ['Forks', 'forks'],
     ['Open Issues', 'open_issues_count'],
     ['Size', 'size'],
     ['Last Push', 'pushed_at'],
@@ -142,6 +159,7 @@ function initDT() {
       if (index === 0)
         row.classList.add('original-repo');
     },
+    scrollX: true,
     // paging: false,
     searchBuilder:{
       // all options at default
@@ -157,8 +175,20 @@ async function fetchAndShow(repo) {
   repo = repo.replace('http://github.com/', '');
   repo = repo.replace(/\.git$/, '');
 
-  const token = document.getElementById('token').value;
-  localStorage.setItem('token', token);
+  const token = document.getElementById('token').value.replaceAll(' ','');
+  if (token) {
+    localStorage.setItem('token', token);
+  } else {
+    localStorage.removeItem('token');
+  }
+
+  const branch = document.getElementById('branch').value.replaceAll(' ','');
+  if (branch) {
+    localStorage.setItem('branch', branch);
+  } else {
+    localStorage.removeItem('branch');
+  }
+
   const api = Api(token);
 
   const data = [];
@@ -170,7 +200,8 @@ async function fetchAndShow(repo) {
       name: fork.name,
       default_branch: fork.default_branch,
       stargazers_count: fork.stargazers_count,
-      forks: fork.forks,
+      forks_count: fork.forks_count,
+      // forks: fork.forks,
       open_issues_count: fork.open_issues_count,
       size: fork.size,
       pushed_at: fork.pushed_at,
@@ -182,9 +213,12 @@ async function fetchAndShow(repo) {
 
     const multiLimiter = data => data.map(singleLimiter);
 
+    const info = window.forkTable.page.info();
+
     const originalRepo = await api.fetch(`https://api.github.com/repos/${repo}`, singleLimiter);
     originalRepo.diff_from_original = originalRepo.diff_to_original = '0';
-    const originalBranch = originalRepo.default_branch;
+    originalRepo.behind_by = originalRepo.ahead_by = '0';
+    const originalBranch = branch ? branch : originalRepo.default_branch;
     data.push(originalRepo);
 
     let page = 1;
@@ -241,7 +275,7 @@ function getRepoFromUrl() {
 
 async function updateData(repo, originalBranch, forks, api) {
 
-  forks.forEach(fork => fork.diff_from_original = fork.diff_to_original = '');
+  forks.forEach(fork => fork.diff_from_original = fork.diff_to_original = fork.behind_by = fork.ahead_by = '');
 
   let index = 1;
   const quota = Quota(api);
@@ -286,6 +320,10 @@ async function fetchMoreDir(repo, originalBranch, fork, fromOriginal, api) {
     : `https://api.github.com/repos/${repo}/compare/${originalBranch}...${fork.owner.login}:${fork.default_branch}`;
 
   const limiter = data => ({
+    status: data.status,
+    ahead_by: data.ahead_by,
+    behind_by: data.behind_by,
+    total_commits: data.total_commits,
     commits: data.commits.map(c => ({
       sha: c.sha.substr(0, 6),
       commit: {
@@ -302,10 +340,14 @@ async function fetchMoreDir(repo, originalBranch, fork, fromOriginal, api) {
   const data = await api.fetch(url, limiter);
 
   if (data !== null) {
-    if (fromOriginal)
+    if (fromOriginal) {
       fork.diff_from_original = printInfo('-', data, fork);
-    else
+      fork.behind_by = data.behind_by;
+    }
+    else {
       fork.diff_to_original = printInfo('+', data, fork);
+      fork.ahead_by = data.ahead_by;
+    }
   }
 }
 
@@ -355,7 +397,8 @@ function Progress(max) {
 }
 
 function Quota(api) {
-  const $quota = $('.quota');
+  $('.quota').removeClass('d-none');
+  const $quota = $('.quota #rate-limit');
 
   function update() {
     const rate = api.getLimits();
@@ -369,14 +412,18 @@ function Quota(api) {
 function Api(token) {
   const config = token
     ? {
+      method: 'GET',
       headers: {
+        'Content-Type': 'application/json',
         authorization: "token " + token
       }
     }
     // : undefined;
     // Work with no token provided. (Limits data availability.)
     : {
+      method: 'GET',
       headers: {
+        'Content-Type': 'application/json',
       }
     };
 

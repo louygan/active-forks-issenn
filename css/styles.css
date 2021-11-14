@@ -1,0 +1,49 @@
+.darkmode-layer, .darkmode-toggle {
+    z-index: 500;
+}
+
+.popover {
+    max-width: 60% !important;
+}
+
+.options-button:after {
+    font-family: "FontAwesome";
+    content: "\f105";
+    float: right;
+    margin-left: 5px;
+    width: 8px;
+}
+
+.options-button.options-button--expanded:after {
+    content: "\f107";
+}
+
+.original-repo td {
+    font-weight: bold;
+}
+
+
+.input-group > :first-child {
+    margin-left: 0;
+}
+
+.input-group > * {
+    margin-left: 5px;
+}
+
+.progression {
+    position: relative !important;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.quota {
+    font-size: 13px;
+}
+
+#rate-limit {
+    font-size: x-small;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 100%;
+}

@@ -27,29 +27,7 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
 
-    <style>
-        .darkmode-layer, .darkmode-toggle { z-index: 500; }
-
-        .popover {
-            max-width: 60% !important;
-        }
-        .quota {
-            font-size: 13px;
-        }
-        .options-button:after {
-            font-family: "FontAwesome";
-            content: "\f105";
-            float: right;
-            margin-left: 5px;
-            width: 8px;
-        }
-        .options-button.options-button--expanded:after {
-            content: "\f107";
-        }
-        .original-repo td {
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body class='mt-4 mb-2'>
@@ -71,6 +49,7 @@
                           <form id="form" role="form">
                               <div class="input-group">
                                   <input id="q" name="q" class="form-control" type="text" placeholder="issenn/active-forks">
+                                  <input id="branch" name="branch" class="form-control" type="text" placeholder="master">
                                   <span class="input-group-btn">
                                       <button id="find" onClick="fetchData()" type="button" class="btn btn-primary">
                                           <i id="spinner" class="fa fa-spinner fa-pulse fa-fw d-none"></i>
@@ -79,9 +58,12 @@
                                   </span>
                               </div>
 
-                              <div class="input-group mt-2">
-                                <input id="token" name="token" class="form-control" type="text" placeholder="Auth Token">
+                              <div class="input-group mt-2 d-flex justify-content-end">
+                                <input id="token" name="token" class="form-control collapsible-content" type="text" placeholder="Auth Token">
                                 <span class="input-group-btn">
+                                    <button id="collapsible" onClick="toggleToken()" type="button" class="btn btn-primary collapsible">
+                                        Hide Token
+                                    </button>
                                     <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line" class="btn btn-success" target="_blank">
                                         Info
                                     </a>
@@ -89,7 +71,8 @@
                                         Options
                                     </a>
                                 </span>
-                                <span class="quota ml-3">
+                                <span class="quota input-group-btn ml-3 d-none">
+                                    <button id="rate-limit" type="button" class="btn btn-primary"></button>
                                 </span>
                               </div>
 
