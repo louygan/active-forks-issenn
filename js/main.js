@@ -438,6 +438,12 @@ function Api(token) {
   async function get(url, fnResponseLimiter) {
     try {
       const { cached, newConfig } = cache.get(url, config);
+        
+      // 202211 skip fething if cached
+      if ( cached ) {
+        return cached.data
+      } 
+      
       const response = await fetch(url, newConfig);
       if (response.status === 304)
         return cached.data;
