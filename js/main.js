@@ -294,7 +294,7 @@ async function updateData(repo, originalBranch, forks, api) {
       const updated = similarChecker.apply(fork);
 
       if (!updated) {
-        console.log('fetching fork ', fork.ownerName, ' info');
+        console.log('fetching fork ', fork.owner.login, ' info');
         await fetchMore(repo, originalBranch, fork, api);
         similarChecker.cache(fork);
       }
