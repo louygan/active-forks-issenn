@@ -88,6 +88,7 @@ function updateDT(data) {
   for (let fork of data) {
     fork.repoLink = `<a href="https://github.com/${fork.full_name}" target="_blank" rel="noopener noreferrer">Link</a>`;
     fork.ownerName = `<img src="${fork.owner.avatar_url || 'https://avatars.githubusercontent.com/u/0?v=4'}&s=48" width="24" height="24" class="mr-2 rounded-circle" />${fork.owner ? fork.owner.login : '<strike><em>Unknown</em></strike>'}`;
+    console.log(fork.ownerName);
     forks.push(fork);
   }
   const dataSet = forks.map(fork =>
@@ -293,6 +294,7 @@ async function updateData(repo, originalBranch, forks, api) {
       const updated = similarChecker.apply(fork);
 
       if (!updated) {
+        console.log('fetching fork ', fork.ownerName, ' info');
         await fetchMore(repo, originalBranch, fork, api);
         similarChecker.cache(fork);
       }
