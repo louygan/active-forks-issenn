@@ -119,7 +119,8 @@ function initDT() {
   ];
 
   // Sort by stars:
-  const sortColName = 'Stars';
+  // 202211 change to sort by pushed_at
+  const sortColName = 'Last Push';
   const sortColumnIdx = window.columnNamesMap
     .map(pair => pair[0])
     .indexOf(sortColName);
@@ -233,8 +234,9 @@ async function fetchAndShow(repo) {
       ++page;
     }
     
-    data.sort(function(a,b){return a.pushed_at.localeCompare(b.pushed_at)});
-    data.reverse();
+    // 202211 sort not working, change sort column in initDT
+    //data.sort(function(a,b){return a.pushed_at.localeCompare(b.pushed_at)});
+    //data.reverse();
     console.log('fetchAndShow: ', data);
     
     await updateData(repo, originalBranch, data.slice(1), api);
