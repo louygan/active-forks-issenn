@@ -233,7 +233,7 @@ async function fetchAndShow(repo) {
       ++page;
     }
     
-    data.sort(function(a,b){return a.pushed_at.localeCompare(b.pushed_at)});
+    data.sort(function(a,b){return b.pushed_at.localeCompare(a.pushed_at)});
     console.log('fetchAndShow: ', data);
     
     await updateData(repo, originalBranch, data.slice(1), api);
