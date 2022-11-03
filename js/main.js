@@ -224,7 +224,7 @@ async function fetchAndShow(repo) {
 
     let page = 1;
     while (data.length - 1 < maxRecords) {
-      const url = `https://api.github.com/repos/${repo}/forks?per_page=${maxRecords}&page=${page}`;
+      const url = `https://api.github.com/repos/${repo}/forks?sort=newest&per_page=${maxRecords}&page=${page}`;
       const someData = await api.fetch(url, multiLimiter);
 
       if (someData.length === 0) break;
