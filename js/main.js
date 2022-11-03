@@ -229,10 +229,13 @@ async function fetchAndShow(repo) {
 
       if (someData.length === 0) break;
       data.push(...someData);
-      console.log('fetchAndShow: ', data);
+      //console.log('fetchAndShow: ', data);
       ++page;
     }
-
+    
+    data.sort(function(a,b){return a.pushed_at.localeCompare(b.pushed_at)});
+    console.log('fetchAndShow: ', data);
+    
     await updateData(repo, originalBranch, data.slice(1), api);
   } catch (error) {
     console.error(error);
