@@ -282,7 +282,12 @@ function getRepoFromUrl() {
 }
 
 async function updateData(repo, originalBranch, forks, api) {
-
+  
+  // 20240108 sort by pushd_at
+  forks.sort(function(a,b){return a.pushed_at.localeCompare(b.pushed_at)});
+  forks.reverse();
+  console.log('updateData: ', forks);
+  // 20240108 end
   forks.forEach(fork => fork.diff_from_original = fork.diff_to_original = fork.behind_by = fork.ahead_by = '');
 
   let index = 1;
