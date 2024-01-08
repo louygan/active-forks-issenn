@@ -417,7 +417,7 @@ function Quota(api) {
   function update() {
     const rate = api.getLimits();
     const reset = moment(rate.reset).fromNow();
-    const reset1 = moment(rate.reset);
+    const reset1 = moment(rate.reset).format();
     $quota.html(`Quota: left ${rate.remaining} / ${rate.limit}<br/>Reset ${reset},at ${reset1}`);
   }
 
