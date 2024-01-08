@@ -4,8 +4,9 @@
 
 This project allows you to find the most active forks of a repository.
 
-[Find Active Fork]([https://louygan.github.io/active-forks-issenn/index.html)
-[Find Active Fork](https://techgaun.github.io/active-forks/index.html)
+[Find Active Fork](https://louygan.github.io/active-forks-issenn/index.html) 
+
+[Find Active Fork original](https://techgaun.github.io/active-forks/index.html)
 
 ## As Bookmarklet
 
