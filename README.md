@@ -1,9 +1,10 @@
 # active-forks
 
-> Find the active github forks of a project
+> Find the active github forks of a project with diff ahead and diff behind
 
 This project allows you to find the most active forks of a repository.
 
+[Find Active Fork]([https://louygan.github.io/active-forks-issenn/index.html)
 [Find Active Fork](https://techgaun.github.io/active-forks/index.html)
 
 ## As Bookmarklet
@@ -17,7 +18,7 @@ Any time you're on a Github repo you can click the bookmarklet
 and it'll bring up the Active Forks of that repo.
 
 ```javascript
-javascript:!function(){if(title=document.title,title)if(thing=title.split(/(GitHub\s-\s)*([^:]*)/)[2],thing){var t="https://techgaun.github.io/active-forks/index.html#"+thing;window.open(t)}else window.alert("Not%20a%20valid%20GitHub%20page")}();
+javascript:!function(){if(title=document.title,title)if(thing=title.split(/(GitHub\s-\s)*([^:]*)/)[2],thing){var t="https://louygan.github.io/active-forks-issenn/index.html#"+thing;window.open(t)}else window.alert("Not%20a%20valid%20GitHub%20page")}();
 ```
 
 ![Screenshot](screenshot.png "Active Forks in Action")
